@@ -1,7 +1,7 @@
 
 class Blob {
   private data : string
-  oid: string
+  private _oid: string
   constructor(data: string) {
     this.data = data;
   }
@@ -11,11 +11,11 @@ class Blob {
   toString() : string {
       return this.data
   }
-  setOid(s: string) {
-      this.oid = s
+  set oid(s: string) {
+      this._oid = s
   }
-  getOid(): string {
-      return this.oid
+  get oid(): string {
+      return this._oid
   }
 }
 

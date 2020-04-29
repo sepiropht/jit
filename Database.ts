@@ -20,8 +20,8 @@ class Database {
     }\0${str}`;
     const shasum = crypto.createHash("sha1");
     shasum.update(content);
-    object.setOid(shasum.digest("hex"));
-    await this.writeObject(object.getOid(), content);
+    object.oid = shasum.digest("hex");
+    await this.writeObject(object.oid, content);
   };
   private writeObject = async (oid: string, content: string): Promise<void> => {
     console.log("pathname", this.pathname);
@@ -31,7 +31,7 @@ class Database {
     await mkdirp(dirname);
     const buffered = Buffer.from(content);
     console.log(buffered, "bufffffffffffffffffffffff");
-    deflate(buffered, (err, buffer) => {
+    deflate(buffered, (_, buffer) => {
       writeFile(object_path, buffer, () => console.log("done"));
     });
   };
