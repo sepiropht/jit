@@ -13,24 +13,19 @@ class Tree extends Blob {
     return "tree";
   }
 
-  toString(): string {
+  toBuffer(): Buffer {
     this.entries.sort();
     return this.entries
       .map(({ name, oid }) => {
-        let enc = new TextEncoder();
-        let modeArray = enc.encode(MODE.padEnd(7));
-        let fileNameArray = enc.encode(name + "\0");
-        let shaArray = Uint8Array.from(oid.match(/../g), (x) =>
-          parseInt(x, 16)
-        );
-        let array = new Uint8Array([
-          ...modeArray,
-          ...fileNameArray,
-          ...shaArray,
-        ]);
-        return new TextDecoder("utf-8").decode(array);
+        let modeBuffer = Buffer.from(MODE.padEnd(7));
+        let fileNameBuffer = Buffer.from(name + "\0");
+        let shaBuffer = Buffer.from(oid, "hex");
+        return Buffer.concat([modeBuffer, fileNameBuffer, shaBuffer]);
       })
-      .join("");
+      .reduce(
+        (finalBuff, currBuff) => Buffer.concat([finalBuff, currBuff]),
+        Buffer.from("")
+      );
   }
 }
 export default Tree;

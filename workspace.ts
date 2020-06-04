@@ -15,8 +15,8 @@ class Workspace {
       .readdirSync(this.pathname)
       .filter((file) => !this.ignore.includes(file));
   }
-  readFile(path): string {
-    return fs.readFileSync(join(this.pathname, path), { encoding: "ascii" });
+  readFile(path): Buffer {
+    return fs.readFileSync(join(this.pathname, path));
   }
 }
 

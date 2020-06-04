@@ -1,21 +1,20 @@
-
 class Blob {
-  private data : string
-  private _oid: string
-  constructor(data: string) {
+  private data: Buffer;
+  private _oid: string;
+  constructor(data: Buffer) {
     this.data = data;
   }
   type(): string {
     return "blob";
   }
-  toString() : string {
-      return this.data
+  toBuffer(): Buffer {
+    return this.data;
   }
   set oid(s: string) {
-      this._oid = s
+    this._oid = s;
   }
   get oid(): string {
-      return this._oid
+    return this._oid;
   }
 }
 
