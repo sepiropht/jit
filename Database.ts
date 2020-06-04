@@ -32,7 +32,7 @@ class Database {
     await mkdirp(dirname);
     console.log(content, "bufffffffffffffffffffffff");
     deflate(content, (_, buffer) => {
-      writeFile(object_path, buffer, () => console.log("done"));
+      writeFile(object_path, buffer, () => console.log("done", dirname));
     });
   };
 }
