@@ -6,6 +6,7 @@ import Database from "./Database";
 import blob from "./blob";
 import Entry from "./entry";
 import Tree from "./tree";
+import Refs from "./refs";
 import { Author } from "./author";
 import Commit from "./commit";
 
@@ -28,6 +29,7 @@ import Commit from "./commit";
       const dbPath = join(gitPath, "objects");
       const workSpace = new WorkSpace(rootPath);
       const database = new Database(dbPath);
+      const refs = new Refs(gitPath);
       let entries: Entry[] = [];
 
       for (const file of workSpace.listFiles()) {
@@ -42,17 +44,21 @@ import Commit from "./commit";
       const tree = new Tree(entries);
       database.store(tree);
 
+      const parent = refs.readHead();
       const name = process.env?.GIT_AUTHOR_NAME || "sepiropht";
       const email = process.env?.GIT_AUTHOR_EMAIL || "sergembotta@mailoo.org";
       const author = new Author(name, email, new Date());
       const message = fs.readFileSync("/dev/stdin").toString();
-      const commit = new Commit(tree.oid, author, message);
+      const commit = new Commit(parent, tree.oid, author, message);
 
       database.store(commit);
+      refs.updateHead(commit.oid);
       const Head = join(gitPath, "HEAD");
 
       fs.writeFileSync(Head, commit.oid);
-      console.log(`[(root-commit) ${commit.oid}] ${message}`);
+      const isRoot = parent ? "(root-commit) " : "";
+
+      console.log(`[${isRoot} ${commit.oid}] ${message}`);
       process.exit(0);
     }
     default: {
