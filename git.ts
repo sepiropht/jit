@@ -48,19 +48,23 @@ import Commit from "./commit";
       database.store(tree);
 
       const parent = refs.readHead();
+      console.log({ parent });
+
       const name = process.env?.GIT_AUTHOR_NAME || "sepiropht";
       const email = process.env?.GIT_AUTHOR_EMAIL || "sergembotta@mailoo.org";
       const author = new Author(name, email, new Date());
       const message = fs.readFileSync("/dev/stdin").toString();
+
       const commit = new Commit(parent, tree.oid, author, message);
 
       database.store(commit);
+
       refs.updateHead(commit.oid);
       const Head = join(gitPath, "HEAD");
 
       fs.writeFileSync(Head, commit.oid);
-      const isRoot = parent ? "(root-commit) " : "";
-
+      const isRoot = parent ? "" : "(root-commit)";
+      console.log({ isRoot });
       console.log(`[${isRoot} ${commit.oid}] ${message}`);
       process.exit(0);
     }

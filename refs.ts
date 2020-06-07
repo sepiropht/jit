@@ -14,11 +14,13 @@ class Refs {
 
   readHead(): string {
     let result = "";
+    console.log(this.headPath);
     try {
-      result = fs.readFileSync(this.headPath).toString();
+      result = fs.readFileSync(join(this.pathname, "HEAD")).toString();
     } catch {
-      return result;
+      console.log("no head yet");
     }
+    console.log(result);
     return result;
   }
 }
