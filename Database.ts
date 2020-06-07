@@ -3,7 +3,7 @@ import { join, parse } from "path";
 import { deflateSync } from "zlib";
 import blob from "./blob";
 import * as mkdirp from "mkdirp";
-import { writeFileSync } from "fs";
+import { writeFileSync, existsSync } from "fs";
 
 interface Database {
   pathname: string;
@@ -27,8 +27,12 @@ class Database {
 }
 function writeObject(oid: string, content: Buffer, pathname) {
   //console.log("pathname", pathname);
-  const object_path = join(pathname, oid.slice(0, 2), oid.slice(2, -2));
-  const dirname = parse(object_path).dir;
+  const objectPath = join(pathname, oid.slice(0, 2), oid.slice(2, -2));
+
+  //object already exist do nothing
+  if (existsSync(objectPath)) return;
+
+  const dirname = parse(objectPath).dir;
   console.log("DIRNAME", dirname);
   mkdirp.sync(dirname);
   //console.log(content, "bufffffffffffffffffffffff");
@@ -36,7 +40,7 @@ function writeObject(oid: string, content: Buffer, pathname) {
   //console.log("OTDOOOOO", dirname);
   const buffer = deflateSync(content);
   //console.log("inside deflate ");
-  writeFileSync(object_path, buffer);
+  writeFileSync(objectPath, buffer);
   //console.log("done", dirname);
 }
 export default Database;
