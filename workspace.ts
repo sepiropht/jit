@@ -18,6 +18,10 @@ class Workspace {
   readFile(path): Buffer {
     return fs.readFileSync(join(this.pathname, path));
   }
+
+  getMode(file: string): number {
+    return parseInt(fs.statSync(file).mode.toString(8), 10);
+  }
 }
 
 export default Workspace;

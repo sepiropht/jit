@@ -17,7 +17,7 @@ class Refs {
     try {
       result = fs.readFileSync(this.headPath).toString();
     } catch {
-      console.log("no head yet");
+      return result;
     }
     return result;
   }

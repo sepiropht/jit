@@ -1,8 +1,6 @@
 import Entry from "./entry";
 import Blob from "./blob";
 
-const MODE = "100644";
-
 class Tree extends Blob {
   private entries: Entry[];
   constructor(entries: Entry[]) {
@@ -16,8 +14,8 @@ class Tree extends Blob {
   toBuffer(): Buffer {
     this.entries.sort();
     return this.entries
-      .map(({ name, oid }) => {
-        let modeBuffer = Buffer.from(MODE.padEnd(7));
+      .map(({ mode, name, oid }) => {
+        let modeBuffer = Buffer.from(mode.padEnd(7));
         let fileNameBuffer = Buffer.from(name + "\0");
         let shaBuffer = Buffer.from(oid, "hex");
         return Buffer.concat([modeBuffer, fileNameBuffer, shaBuffer]);

@@ -1,3 +1,5 @@
+#!/usr/bin/env ts-node
+
 import * as mkdirp from "mkdirp";
 import { join } from "path";
 import * as fs from "fs";
@@ -29,16 +31,17 @@ import Commit from "./commit";
       const dbPath = join(gitPath, "objects");
       const workSpace = new WorkSpace(rootPath);
       const database = new Database(dbPath);
+
       const refs = new Refs(gitPath);
       let entries: Entry[] = [];
 
       for (const file of workSpace.listFiles()) {
         const data = workSpace.readFile(file);
         const bloB = new blob(data);
-
+        const mode = workSpace.getMode(file);
         await database.store(bloB);
 
-        entries.push(new Entry(file, bloB.oid));
+        entries.push(new Entry(file, bloB.oid, mode));
       }
 
       const tree = new Tree(entries);
